@@ -1,14 +1,33 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
+import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { firebaseAuth } from '../utils/firebase-config';
+import { useNavigate } from 'react-router-dom';
 export default function signup() {
+  const navigate = useNavigate();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [showPassword,setShowPassword] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const[formValues,setFormValues] = useState({
     email:"",
     password:"",
+  })
+  const handleSignIn = async() => {
+        try{
+            const { email, password } = formValues;
+            await createUserWithEmailAndPassword(firebaseAuth,email,password);
+        }
+        catch(err){
+           console.log(err);
+        }
+  };
+
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    // eslint-disable-next-line no-undef
+    if (currentUser) navigate("/");
   })
   return (
   <Container showPassword={showPassword}>
@@ -35,11 +54,11 @@ export default function signup() {
         }
         
       </div>
-      <button>Signup</button>
+      <button onClick={handleSignIn}>Signup</button>
     </div>
     </div>
-  </Container>)
-}
+  </Container>
+)}
 
 const Container = styled.div`
 position:relative;
