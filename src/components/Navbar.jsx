@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
+import { onAuthStateChanged,signOut} from "firebase/auth";
+import {firebaseAuth} from "../utils/firebase-config";
 import {FaPowerOff, FaSearch} from 'react-icons/fa';
 export default function Navbar() {
   const [ isScrolled] = useState(false);
@@ -11,6 +13,12 @@ export default function Navbar() {
         { name:"TV Shows" , link: "/tv"},
         { name:"Movies" , link: "/movies"},
         {name:"My List" , link: "/mylist"}];
+
+        const navigate = useNavigate();
+        onAuthStateChanged(firebaseAuth, (currentUser) => {
+          // eslint-disable-next-line no-undef
+          if (!currentUser) navigate("/login");
+        })
     
         const [showSearch,setshowSearch] = useState(false);
         const [inputHover, setInputHover] = useState(false);
@@ -21,7 +29,7 @@ export default function Navbar() {
       <nav className={`flex ${isScrolled ? "scrolled" : ""}`}>
         <div className="left flex a-center">
           <div className="brand flex a-center j-center">
-            <img src={logo} alt="logo" />
+            <img src={logo}alt="logo"/>
           </div>
           <ul className='links flex'>
             {links.map(({name,link})=>{
@@ -42,17 +50,17 @@ export default function Navbar() {
             } >
               <FaSearch />
             </button>
-            <input type="text" placeholder='Search' omMouseEnter={()=>setInputHover(true)}
+            <input type="text" placeholder='Search' onMouseEnter={()=>setInputHover(true)}
             onMouseLeave={()=>setInputHover(false)}
-            onBlur={()=>{setshowSearch(false);
+            onBlur={()=>{
+            setshowSearch(false);
             setInputHover(false)
             }} />
           </div>
-          <button onClick={()=>FaSignOutAlt(firebaseAuth)}>
+          <button onClick={() =>signOut(firebaseAuth)}>
             <FaPowerOff />
           </button>
         </div>
-
       </nav>
     </Container>
   )
@@ -94,6 +102,51 @@ nav{
   gap: 1rem;
   button{
     background-color:transparent;
+    border:none;
+    cursor:pointer;
+    &:focus{
+      outline:none;
+    }
+    svg{
+      color: #f34242;
+      font-size: 1.2rem;
+    }
+  }
+  .search{
+    display:flex;
+    gap:0.4rem;
+    align-items:center;
+    justify-content:center;
+    padding:0.2rem;
+    padding-left:0.5rem;
+    button{
+      background-color:transparent;
+      svg{
+        color:white;
+      }
+    }
+    input{
+      width:0;
+      opacity:0;
+      visibility:hidden;
+      transition: 0.3s ease-in-out;
+      background-color: transparent;
+      border:none;
+      color:white;
+      &:focus{
+        outline: none;
+      }
+    }
+  }
+  .show-search{
+    border:1px solid white;
+    background-color: rgba(0,0,0,0.6);
+    input{
+      width:100%;
+      opacity:1;
+      visibility:visible;
+      padding: 0.3rem;
+    }
   }
 }
 }
