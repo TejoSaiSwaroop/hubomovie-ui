@@ -65,12 +65,36 @@ nav{
   position:sticky;
   top:0;
   height:6.5rem;
-}
+  width:100%;
+  justify-content:space-between;
+  position:fixed;
+  z-index:2;
+  padding:0 4rem;
+  align-items:center;
+  transition: 0.3s ease-in-out;
 .left{
+  gap:2rem;
   .brand{
     img{
       height:4rem;
     }
   }
+  .links{
+    list-style-type:none;
+    gap: 2rem;
+    li{
+      a{
+        color:white;
+        text-decoration:none;
+      }
+    }
+  }
+}
+.right{
+  gap: 1rem;
+  button{
+    background-color:transparent;
+  }
+}
 }
 `;
