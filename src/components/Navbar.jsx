@@ -7,7 +7,11 @@ import { onAuthStateChanged,signOut} from "firebase/auth";
 import {firebaseAuth} from "../utils/firebase-config";
 import {FaPowerOff, FaSearch} from 'react-icons/fa';
 export default function Navbar() {
-  const [ isScrolled] = useState(false);
+  const [ isScrolled,setisScrolled] = useState(false);
+  window.onscroll = () => {
+    setisScrolled(window.scrollY === 0 ? false : true);
+    return () => (window.onscroll = null);
+  };
     const links=
         [{ name:"Home" , link: "/"},
         { name:"TV Shows" , link: "/tv"},
