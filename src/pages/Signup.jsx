@@ -43,10 +43,16 @@ export default function signup() {
         </h6>
       </div>
       <div className="form">
-        <input type="email" placeholder='Email Address' name="email" value={formValues.email} onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
+        <input type="email" 
+        placeholder='Email Address' 
+        name="email" value={formValues.email} 
+        onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
         {
           showPassword && (
-          <input type="password" placeholder='Password' name='password' value={formValues.password} onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
+          <input type="password"
+           placeholder='Password'
+            name='password' value={formValues.password} 
+            onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
 )}
         
         {

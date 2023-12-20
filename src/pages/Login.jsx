@@ -9,13 +9,13 @@ import { useNavigate } from 'react-router-dom';
 export default function Login() {
   const navigate = useNavigate();
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [showPassword,setShowPassword] = useState(false);
+ 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const[formValues,setFormValues] = useState({
     email:"",
     password:"",
   })
-  const handleSignIn = async() => {
+  const handleLogIn = async() => {
         try{
             const { email, password } = formValues;
             await signInWithEmailAndPassword(firebaseAuth,email,password);
@@ -34,27 +34,32 @@ export default function Login() {
     <BackgroundImage/>
     <div className="content">
       <Header/>
-      <div className="form-container flex-column a-center j-center">
+      <div className="form-container flex column a-center j-center">
         <div className="form flex column a-center j-center">
           <div className="title">
             <h3>Login</h3>
-            <div>
+            </div>
               <div className="container flex column">
-              <input type="email" placeholder='Email Address' name="email" value={formValues.email} onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
-        {
-          showPassword && (
-          <input type="password" placeholder='Password' name='password' value={formValues.password} onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
-)}
+              <input type="email" 
+              placeholder='Email Address' 
+              name="email" value={formValues.email}
+               onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
         
-        {
-          !showPassword && <button onClick={()=>setShowPassword(true)}>Get Started</button>
-        }
+          
+          <input type="password"
+           placeholder='Password' 
+           name='password' value={formValues.password}
+            onChange={(e)=>setFormValues({...formValues,[e.target.name]:e.target.value})}/>
+
+        
+         <button onClick={()=>handleLogIn(true)}>Login</button>
+        
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    
+   
   </Container>
 )}
 
@@ -69,29 +74,20 @@ position:relative;
   width:100vw;
   display:grid;
   grid-template-rows:15vh 85vh;
-  .body{
-    gap:1rem;
-    .text{
-      gap:1rem;
-      text-align:center;
-      font-size:2rem;
-      h1{
-        padding:0 25rem;
-      }
-    }
-    .form{
-      display:grid;
-      grid-template-columns: ${({showPassword})=>showPassword ? "1fr 1fr" : "2fr 1fr" };
-      width:60%;
+  .form-container{
+  gap:2rem;
+  height:85vh;
+  .form{
+    padding:2rem;
+    background-color:#000000b0;
+    width:25vw;
+    gap:2rem;
+    color:white;
+    .container{
+      gap:2rem;
       input{
-        color:black;
-        border:none;
-        padding:1.5rem;
-        font-size:1.2rem;
-        border:1px solid black;
-        &:focus{
-          outline:none;
-        }
+        padding:0.5rem 1rem;
+        width:15rem;
       }
       button{
         padding: 0.5rem 1rem;
@@ -99,21 +95,12 @@ position:relative;
         border:none;
         cursor:pointer;
         color:white;
-    
+        border-radius:0.2rem;
         font-weight:bolder;
         font-size: 1.05rem;
       }
     }
-    button{
-      padding: 0.5rem 1rem;
-      background-color:#e50914;
-      border:none;
-      cursor:pointer;
-      color:white;
-      border-radius:0.2rem;
-      font-weight:bolder;
-      font-size: 1.05rem;
-    }
+  }
   }
 }
 
