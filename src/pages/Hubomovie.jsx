@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
-import backgroundImage from '../assets/home.jpg';
+import backgroundImage from '../assets/home.jpeg';
 import MovieLogo from "../assets/homeTitle.webp";
 import { FaPlay } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import {AiOutlineInfoCircle} from "react-icons/ai";
 import styled from 'styled-components';
 export default function hubomovie() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [ isScrolled, setisScrolled] = useState(false);
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
   window.onscroll = () => {
     setisScrolled(window.scrollY === 0 ? false : true);
     return () => (window.onscroll = null);
@@ -23,7 +25,7 @@ export default function hubomovie() {
           <img src={MovieLogo} alt="movielogo"/>
         </div>
         <div className="buttons flex">
-          <button className='flex j-center a-center'>
+          <button className='flex j-center a-center' onClick={()=> navigate("/player")}>
             <FaPlay /> Play
           </button>
           <button className='flex j-center a-center'>
