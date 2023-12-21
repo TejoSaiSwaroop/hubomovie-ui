@@ -1,0 +1,1 @@
+export const  TMBD_BASE_URL = `https://api.jikan.moe/v4`

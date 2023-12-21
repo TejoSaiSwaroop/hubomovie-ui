@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import backgroundImage from '../assets/home.jpeg';
 import MovieLogo from "../assets/homeTitle.webp";
@@ -6,11 +6,21 @@ import { FaPlay } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {AiOutlineInfoCircle} from "react-icons/ai";
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { getGenres } from '../store';
 export default function hubomovie() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [ isScrolled, setisScrolled] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const navigate = useNavigate();
+
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const dispatch = useDispatch();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(()=>{
+    dispatch(getGenres())
+  },[])
   window.onscroll = () => {
     setisScrolled(window.scrollY === 0 ? false : true);
     return () => (window.onscroll = null);
