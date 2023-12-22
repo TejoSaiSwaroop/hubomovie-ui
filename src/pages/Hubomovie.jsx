@@ -9,6 +9,7 @@ import {AiOutlineInfoCircle} from "react-icons/ai";
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies, getGenres } from '../store';
+import Slider from '../components/Slider';
 
 export default function hubomovie() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -51,6 +52,7 @@ useEffect(()=>{
         </div>
       </div>
     </div>
+    <Slider movies={movies} />
     </Container>
   )
 }
