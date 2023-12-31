@@ -5,7 +5,11 @@ export default function CardSlider({data,title}) {
   const [showControls,setShowControls] = useState(false);
   const [sliderposition,setsliderpositiion] = useState(0);
   const listRef = useRef();
-  return<Container> <div className='flex'>{
+  return<Container className='flex column'
+  onMouseEnter={()=>setShowControls(true)}
+  onMouseLeave={()=>setShowControls(false)}>
+
+     <div className='flex'>{
         data.map((movie,index)=> {
 return<Card movieData={movie} index={index} key={movie.id} />
         })
