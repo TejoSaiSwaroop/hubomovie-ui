@@ -26,7 +26,6 @@ export default function Login() {
   };
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
-    // eslint-disable-next-line no-undef
     if (currentUser) navigate("/");
   })
   return (

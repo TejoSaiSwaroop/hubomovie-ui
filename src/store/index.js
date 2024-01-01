@@ -59,6 +59,19 @@ const getRawData = async (api,genres,paging) => {
     }
     
     );
+
+    
+    export const fetchDataByGenre = createAsyncThunk("hubomovie/moviesByGenres",
+    async({genre,type},thunkApi)=>{
+       const { hubomovie: {genres},} = thunkApi.getState();
+       return getRawData(`${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
+      genres
+      );
+      
+    }
+    
+    );
+
  //return getRawData(`${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`)
     const HubomovieSlice = createSlice({
         name: "Hubomovie",
@@ -69,6 +82,10 @@ const getRawData = async (api,genres,paging) => {
                 state.genresLoaded = true;
             });
             builder.addCase(fetchMovies.fulfilled,(state,action) => {
+                state.movies = action.payload;
+                
+            });
+            builder.addCase(fetchDataByGenre.fulfilled,(state,action) => {
                 state.movies = action.payload;
                 
             });
