@@ -7,12 +7,32 @@ import {RiThumbUpFill,RiThumbDownFill} from "react-icons/ri";
 import { BsCheck } from 'react-icons/bs';
 import {AiOutlinePlus} from "react-icons/ai"
 import {BiChevronDown} from "react-icons/bi";
+import {onAuthStateChanged } from 'firebase/auth';
+import { firebaseAuth } from '../utils/firebase-config';
+import axios from 'axios';
+
 
 export default React.memo ( function Card({movieData,isLiked = false}) {
     const [isHovered,setIsHovered ] = useState(false);
     const navigate = useNavigate();
+    const [email , setEmail] = useState(undefined);
+    onAuthStateChanged(firebaseAuth, (currentUser) => {
+        if (currentUser) setEmail(currentUser.email);
+        else navigate("/login");
+      })
+   const addToList = async () => {
+    try{
+    await axios.post("http://localhost:5000/api/user/add",{email,data:movieData})
+    }
+    catch(err){
+        console.log(err);
+    }
+   }
   return (
-    <Container onMouseEnter={()=> setIsHovered(true)} onMouseLeave={()=> setIsHovered(false)}>
+    <Container 
+    onMouseEnter={()=> setIsHovered(true)}
+    onMouseLeave={()=> setIsHovered(false)}
+    >
         <img src={`https://image.tmdb.org/t/p/w500${movieData.image}`} alt="movie" />
         {
             isHovered && (
@@ -38,7 +58,7 @@ export default React.memo ( function Card({movieData,isLiked = false}) {
                               <RiThumbDownFill title="Dislike" />
                               {
                                 isLiked ? (
-                                    <BsCheck title='Remove from List' />) : (<AiOutlinePlus title='Add to my list'/>)
+                                    <BsCheck title='Remove from List' />) : (<AiOutlinePlus title='Add to my list' onClick={addToList}/>)
                               }
                             </div>
                             <div className="info">

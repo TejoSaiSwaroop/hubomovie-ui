@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, getGenres } from '../store';
+import { fetchMovies, getGenres, getUserLikedMovies } from '../store';
 import { onAuthStateChanged } from 'firebase/auth';
 import { firebaseAuth } from '../utils/firebase-config';
 import styled from 'styled-components';
@@ -9,57 +9,64 @@ import Navbar from '../components/Navbar';
 import Slider from '../components/Slider';
 import NotAvailable from '../components/NotAvailable';
 import SelectGenre from '../components/SelectGenre';
+import Card from '../components/Card';
 
 
-export default function Movies() {
+
+export default function UserLiked() {
     const [ isScrolled, setisScrolled] = useState(false);
     const navigate = useNavigate();
-    const genresLoaded = useSelector((state)=> state.hubomovie.genresLoaded);
     const movies = useSelector((state) => state.hubomovie.movies);
-    const genres = useSelector((state) => state.hubomovie.genres);
+
+
+    const [email , setEmail] = useState(undefined);
+
+    onAuthStateChanged(firebaseAuth, (currentUser) => {
+        if (currentUser) setEmail(currentUser.email);
+        else navigate("/login");
+      })
+
     const  dispatch = useDispatch();
 
   
   useEffect(()=>{
-  dispatch(getGenres())
-  },[]);
+  if(email) {
+        dispatch(getUserLikedMovies(email));
+  }
+  },[email]);
   
-  useEffect(()=>{
-    if(genresLoaded) dispatch(fetchMovies({type:"movies"}));
-  },[dispatch, genresLoaded])
+
   
     window.onscroll = () => {
       setisScrolled(window.scrollY === 0 ? false : true);
       return () => (window.onscroll = null);
     };
 
-    onAuthStateChanged(firebaseAuth, (currentUser) => {
-        //if (currentUser) navigate("/");
-      })
-
+   
   return (
     <Container>
-        <div className="navbar">
-            <Navbar isScrolled = {isScrolled} />
-        </div>
-       
-                <div className="data">
-                <SelectGenre genres={genres} type="movie" />
-            {
-                movies.length ? <Slider movies={movies} /> : <NotAvailable />
-            }
+        <Navbar isScrolled = {isScrolled} />
+        <div className="content flex column">
+            <h1>My List</h1>
+            <div className="grid flex">
+                {movies && movies.map((movie,index)=>{
+                    return <Card movieData = {movie} index = {index} key={movie.id} isLiked={true}/>
+                })}
+            </div>
         </div>
     </Container>
   )
 }
-
 const Container = styled.div`
-.data{
+.content{
+    margin:2.3rem;
     margin-top: 8rem;
-    .not-available{
-        text-align: center;
-        color:white;
-        margin-top: 4rem;
+    gap: 3rem;
+    h1{
+        margin-left: 3rem;
     }
-}
-`;
+    .grid{
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+}`;

@@ -38,7 +38,7 @@ if(movie.backdrop_path){
 });
 };
 
-const getRawData = async (api,genres,paging) => {
+const getRawData = async (api,genres,paging = false) => {
    const moviesArray = [];
    for(let i=1;moviesArray.length<60 && i<10; i++){
    const {data:{results}} =  await axios.get(`${api}${paging ? `&page=${i}` : ""}`
@@ -72,7 +72,11 @@ const getRawData = async (api,genres,paging) => {
     
     );
 
- //return getRawData(`${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`)
+    export const getUserLikedMovies = createAsyncThunk("hubomovie/getLiked", async (email) =>{
+        const {data:{movies}} = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
+        return movies; 
+    })
+
     const HubomovieSlice = createSlice({
         name: "Hubomovie",
         initialState,
@@ -89,6 +93,10 @@ const getRawData = async (api,genres,paging) => {
                 state.movies = action.payload;
                 
             });
+            builder.addCase(getUserLikedMovies.fulfilled,(state,action) => {
+                state.movies = action.payload;
+                
+            });
         },
     });
 
@@ -97,3 +105,5 @@ export const store = configureStore({
         hubomovie : HubomovieSlice.reducer,
     }
 });
+
+export const { setGenres, setMovies } = HubomovieSlice.actions;

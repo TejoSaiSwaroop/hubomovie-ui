@@ -11,7 +11,7 @@ import NotAvailable from '../components/NotAvailable';
 import SelectGenre from '../components/SelectGenre';
 
 
-export default function Movies() {
+export default function TVShows() {
     const [ isScrolled, setisScrolled] = useState(false);
     const navigate = useNavigate();
     const genresLoaded = useSelector((state)=> state.hubomovie.genresLoaded);
@@ -25,8 +25,8 @@ export default function Movies() {
   },[]);
   
   useEffect(()=>{
-    if(genresLoaded) dispatch(fetchMovies({type:"movies"}));
-  },[dispatch, genresLoaded])
+    if(genresLoaded) dispatch(fetchMovies({type:"tv"}));
+  },[genresLoaded])
   
     window.onscroll = () => {
       setisScrolled(window.scrollY === 0 ? false : true);
@@ -44,7 +44,7 @@ export default function Movies() {
         </div>
        
                 <div className="data">
-                <SelectGenre genres={genres} type="movie" />
+                <SelectGenre genres={genres} type="tv" />
             {
                 movies.length ? <Slider movies={movies} /> : <NotAvailable />
             }
