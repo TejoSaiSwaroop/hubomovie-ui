@@ -13,45 +13,56 @@ import SelectGenre from '../components/SelectGenre';
 
 export default function TVShows() {
     const [ isScrolled, setisScrolled] = useState(false);
-    const navigate = useNavigate();
     const genresLoaded = useSelector((state)=> state.hubomovie.genresLoaded);
     const movies = useSelector((state) => state.hubomovie.movies);
     const genres = useSelector((state) => state.hubomovie.genres);
+
+    const  navigate = useNavigate();
     const  dispatch = useDispatch();
 
   
   useEffect(()=>{
-  dispatch(getGenres())
+    if(!genres.length)  dispatch(getGenres());
   },[]);
   
   useEffect(()=>{
-    if(genresLoaded) dispatch(fetchMovies({type:"tv"}));
-  },[genresLoaded])
-  
-    window.onscroll = () => {
-      setisScrolled(window.scrollY === 0 ? false : true);
-      return () => (window.onscroll = null);
+    if(genresLoaded)
+     { 
+      dispatch(fetchMovies({ genres, type:"tv" }))
     };
+    },[genresLoaded])
+  
+const [user,setUser]  = useState(undefined);
 
     onAuthStateChanged(firebaseAuth, (currentUser) => {
-        //if (currentUser) navigate("/");
+       if (currentUser) setUser(currentUser.uid);
+        else navigate("/login");
       })
 
-  return (
-    <Container>
-        <div className="navbar">
-            <Navbar isScrolled = {isScrolled} />
-        </div>
-       
-                <div className="data">
-                <SelectGenre genres={genres} type="tv" />
-            {
-                movies.length ? <Slider movies={movies} /> : <NotAvailable />
-            }
-        </div>
-    </Container>
-  )
-}
+      window.onscroll = () => {
+        setisScrolled(window.scrollY === 0 ? false : true);
+        return () => (window.onscroll = null);
+      };
+
+      return (
+        <Container>
+          <Navbar isScrolled={isScrolled} />
+          <div className="data">
+            <SelectGenre genres={genres} type="tv" />
+            {movies.length ? (
+              <>
+                <Slider movies={movies} />
+              </>
+            ) : (
+              <h1 className="not-available">
+                No TV Shows avaialble for the selected genre. Please select a
+                different genre.
+              </h1>
+            )}
+          </div>
+        </Container>
+      );
+    }
 
 const Container = styled.div`
 .data{

@@ -8,9 +8,7 @@ import { firebaseAuth } from '../utils/firebase-config';
 import { useNavigate } from 'react-router-dom';
 export default function signup() {
   const navigate = useNavigate();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [showPassword,setShowPassword] = useState(false);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const[formValues,setFormValues] = useState({
     email:"",
     password:"",
@@ -26,7 +24,6 @@ export default function signup() {
   };
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
-    // eslint-disable-next-line no-undef
     if (currentUser) navigate("/");
   })
   return (

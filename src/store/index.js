@@ -1,6 +1,6 @@
 import {configureStore,
-    createAsyncThunk,
-    createSlice,
+       createAsyncThunk,
+       createSlice,
     } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_KEY, TMBD_BASE_URL } from "../utils/constants";
@@ -8,7 +8,7 @@ import { API_KEY, TMBD_BASE_URL } from "../utils/constants";
 
     const initialState = {
       movies:[],
-      genresLoaded:[],
+      genresLoaded:false,
       genres:[],
        
     };
@@ -49,6 +49,17 @@ const getRawData = async (api,genres,paging = false) => {
    return moviesArray
 }
 
+export const fetchDataByGenre = createAsyncThunk("hubomovie/genre",
+async({genre,type},thunkApi)=>{
+   const { hubomovie: {genres},} = thunkApi.getState();
+   return getRawData(`${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
+  genres
+  );
+  
+}
+
+);
+
     export const fetchMovies = createAsyncThunk("hubomovie/trending",
     async({type},thunkApi)=>{
        const { hubomovie: {genres},} = thunkApi.getState();
@@ -61,21 +72,21 @@ const getRawData = async (api,genres,paging = false) => {
     );
 
     
-    export const fetchDataByGenre = createAsyncThunk("hubomovie/moviesByGenres",
-    async({genre,type},thunkApi)=>{
-       const { hubomovie: {genres},} = thunkApi.getState();
-       return getRawData(`${TMBD_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
-      genres
-      );
-      
-    }
-    
-    );
+
 
     export const getUserLikedMovies = createAsyncThunk("hubomovie/getLiked", async (email) =>{
         const {data:{movies}} = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
         return movies; 
     })
+
+    export const removeMovieFromLiked = createAsyncThunk("hubomovie/deleteLiked", async({movieId,email}) =>{
+        const {data:{movies}} = await axios.put(`http://localhost:5000/api/user/delete`,{
+            email,movieId});
+        return movies; 
+    })
+
+
+
 
     const HubomovieSlice = createSlice({
         name: "Hubomovie",
@@ -95,7 +106,9 @@ const getRawData = async (api,genres,paging = false) => {
             });
             builder.addCase(getUserLikedMovies.fulfilled,(state,action) => {
                 state.movies = action.payload;
-                
+            });
+            builder.addCase(removeMovieFromLiked.fulfilled,(state,action) => {
+                state.movies = action.payload;
             });
         },
     });
